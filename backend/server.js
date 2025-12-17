@@ -16,6 +16,7 @@ mongoose.connect(process.env.MONGO_URI)
 })
 
 import userRoutes from "./routes/userRoutes.js"
+import productRoutes from "./routes/productRoutes.js"
 
 
 
@@ -24,6 +25,7 @@ app.get("/",(req,res)=>{
 })
 
 app.use("/api/users",userRoutes)
+app.use("/api/products",productRoutes)
 
 app.listen(PORT,()=>{
     console.log(`Server running at PORT ${PORT}`)
