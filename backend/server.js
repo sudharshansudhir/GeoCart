@@ -1,24 +1,20 @@
 import express  from "express"
 import cors from "cors"
-import jwt from "jsonwebtoken"
-import bcrypt from "bcrypt"
 import dotenv from "dotenv"
 import mongoose from "mongoose"
 dotenv.config() 
 
+import userRoutes from "./routes/userRoutes.js"
+import productRoutes from "./routes/productsRoutes.js"
+
 const PORT=process.env.PORT || 5000
 const app=express()
-
+app.use(express.json())
 mongoose.connect(process.env.MONGO_URI)
 .then(()=>console.log("MongoDB is Connected"))
 .catch((e)=>{
-    console.log("Error in connecting to DB")
+    console.log("Error in connecting to DB",e)
 })
-
-import userRoutes from "./routes/userRoutes.js"
-import productRoutes from "./routes/productRoutes.js"
-
-
 
 app.get("/",(req,res)=>{
     res.send("Hello From Server")
