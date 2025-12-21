@@ -5,7 +5,8 @@ const user=new mongoose.Schema({
     email:"String",
     phonenumber:"String",
     password:"String",
-    address:"String"
+    address:"String",
+    cart:[{type:"String"}]
 })
 
 

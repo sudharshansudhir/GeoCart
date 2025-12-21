@@ -1,381 +1,164 @@
-import React from 'react'
+import React, { useEffect, useState, useMemo } from "react";
+import axios from "axios";
+
+const API_BASE = import.meta.env.VITE_URI;
 
 const AllGrocery = () => {
-const products=[
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-    {
-    img:"..",
-    name:"item1"
-},
-]
+  const [products, setProducts] = useState([]);
+  const [counts, setCounts] = useState({});
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
 
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const groceries = await axios.get(`${API_BASE}/api/products/`);
+        setProducts(groceries.data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    fetchProducts();
+  }, []);
+
+  /* ---------- Count Logic ---------- */
+  const increment = (id) => {
+    setCounts((prev) => ({
+      ...prev,
+      [id]: (prev[id] || 0) + 1,
+    }));
+  };
+
+  const decrement = (id) => {
+    setCounts((prev) => ({
+      ...prev,
+      [id]: prev[id] > 0 ? prev[id] - 1 : 0,
+    }));
+  };
+
+  /* ---------- Search + Filter Logic ---------- */
+  const filteredProducts = useMemo(() => {
+    return products.filter((item) => {
+      const matchSearch = item.name
+        .toLowerCase()
+        .includes(search.toLowerCase());
+
+      const matchCategory =
+        category === "All" || item.category === category;
+
+      return matchSearch && matchCategory;
+    });
+  }, [products, search, category]);
 
   return (
-    <div className='flex justify-center items-center'>
-    <div className='bg-white rounded-md my-5 w-[90%] py-5'>
+    <div id="grocery" className="flex justify-center">
+      <div className="bg-white rounded-xl my-6 w-[92%] py-6">
 
-        <div className='px-10 flex w-full gap-4 justify-between items-center '>
-            <div className='w-[50%]'>
-                <div className="flex px-4 items-center text-sm bg-white h-12 outline rounded w-full">
-                    <input className="px-2 w-full h-full outline-none text-gray-500 bg-transparent" type="email" placeholder="Search..." />
-                    <button type="submit" className="bg-green-800 py-2 px-4 rounded-sm active:scale-95 transition">
-                        <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M10.836 10.615 15 14.695" stroke="#ffffffff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                                <path clip-rule="evenodd" d="M9.141 11.738c2.729-1.136 4.001-4.224 2.841-6.898S7.67.921 4.942 2.057C2.211 3.193.94 6.281 2.1 8.955s4.312 3.92 7.041 2.783" stroke="#ffffffff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                    </button>
-                </div>
+        {/* Search & Filter */}
+        <div className="px-10 flex flex-wrap gap-6 justify-between items-center">
+          
+          {/* Search */}
+          <div className="w-full md:w-[50%]">
+            <div className="flex items-center bg-gray-100 h-12 rounded-lg px-4">
+              <input
+                className="w-full bg-transparent outline-none text-gray-700"
+                type="text"
+                placeholder="Search products..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <span className="text-gray-500">🔍</span>
             </div>
-            <div className='w-[25%]'>
-                <label htmlFor="lst" className='font-bold me-2'>Category</label>
-                    <select name="grocery-lst" className='bg-yellow-100 w-50 border rounded-md py-2 px-4' id="lst">
-                        <option value="All">All</option>
-                        <option value="Vegetables">Vegetables</option>
-                        <option value="Fruits">Fruits</option>
-                        <option value="Masala">Masala's</option>
-                    </select>
-            </div>
+          </div>
+
+          {/* Category Filter */}
+          <div className="w-full md:w-[25%]">
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full bg-yellow-100 border border-yellow-300 rounded-lg py-3 px-4 font-semibold outline-none hover:bg-yellow-200 transition"
+            >
+              <option value="All">All Categories</option>
+              <option value="Vegetables">Vegetables</option>
+              <option value="Fruits">Fruits</option>
+              <option value="Masala">Masala</option>
+              <option value="Grocery">Grocery</option>
+            </select>
+          </div>
         </div>
 
-        <div className='my-4'>
-            <div className='flex justify-center items-center'>
-                <img src="." className='w-[100%] h-100'/>
-            </div>
+        {/* Title */}
+        <div className="px-10 my-6 font-bold text-xl">
+          All Products ({filteredProducts.length})
         </div>
 
-        <div>
-            <div>All Products</div>
+        {/* Products Grid (4 per row) */}
+        <div className="px-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filteredProducts.map((item) => {
+            const count = counts[item._id] || 0;
 
-    <div className='flex gap-2 flex-wrap justify-between items-center'>
-            {               
-                products && products.map((item)=>{
-                    return <div className='w-40 border-2 border-black h-40'>
-                        <img src={item.img} alt="" />
+            return (
+              <div
+                key={item._id}
+                className="border rounded-xl overflow-hidden shadow-md 
+                           hover:shadow-xl transform hover:-translate-y-2 
+                           transition-all duration-300 group bg-white"
+              >
+                {/* Image */}
+                <div className="relative h-44 overflow-hidden">
+                  <img
+                    src={item.img}
+                    alt={item.name}
+                    className="h-full w-full object-cover 
+                               group-hover:scale-110 transition-transform duration-500"
+                  />
+
+                  {/* Hover Controls */}
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                    <div className="flex items-center gap-4 bg-white px-4 py-2 rounded-lg">
+                      <button
+                        className="text-lg font-bold px-2 hover:text-red-500"
+                        onClick={() => decrement(item._id)}
+                      >
+                        −
+                      </button>
+
+                      <span className="font-semibold text-lg">{count}</span>
+
+                      <button
+                        className="text-lg font-bold px-2 hover:text-green-600"
+                        onClick={() => increment(item._id)}
+                      >
+                        +
+                      </button>
                     </div>
-                })
-            }
-    </div>
+                  </div>
+                </div>
 
+                {/* Product Info */}
+                <div className="p-4 text-center">
+                  <p className="font-semibold text-base truncate">
+                    {item.name}
+                  </p>
+                  <p className="text-gray-600 mt-1">₹{item.price}</p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    {item.category}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
+        {/* Empty State */}
+        {filteredProducts.length === 0 && (
+          <div className="text-center text-gray-500 mt-10">
+            No products found 😕
+          </div>
+        )}
+      </div>
     </div>
-    </div>
-  )
-}
+  );
+};
 
-export default AllGrocery
+export default AllGrocery;

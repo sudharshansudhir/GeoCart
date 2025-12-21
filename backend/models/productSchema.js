@@ -5,6 +5,8 @@ const products=new mongoose.Schema({
     price:"String",
     brand:"String",
     shop_name:"String",
+    category:"String",
+    img:"String",
     shop_address:"String",
     exp_date:"String",
     quantity:"String"
