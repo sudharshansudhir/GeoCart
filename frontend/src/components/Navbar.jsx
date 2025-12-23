@@ -1,5 +1,6 @@
 import React from "react";
 import logo from "../assets/GeoCart-Logo.png";
+import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
   return (
@@ -18,35 +19,25 @@ const Navbar = () => {
 
         {/* Buttons */}
         <div className="flex items-center gap-6">
-          <a href=""  className="relative px-3 py-1 font-medium text-gray-700 hover:text-green-700 transition
-                             after:content-[''] after:absolute after:left-0 after:-bottom-1
-                             after:h-[2px] after:w-0 after:bg-green-700 hover:after:w-full after:transition-all">
+          <NavLink to="/"  className={({ isActive }) => isActive ? 'active-link' : 'nav-hover' }>
             Home
-          </a>
+          </NavLink>
 
-          <a href="#grocery"  className="relative px-3 py-1 font-medium text-gray-700 hover:text-green-700 transition
-                             after:content-[''] after:absolute after:left-0 after:-bottom-1
-                             after:h-[2px] after:w-0 after:bg-green-700 hover:after:w-full after:transition-all">
-            Products
-          </a>
+          <NavLink to="/allproducts"  className={({ isActive }) => isActive ? 'active-link' : 'nav-hover' }>
+            AllProducts
+          </NavLink>
 
-          <a href="" className="relative px-3 py-1 font-medium text-gray-700 hover:text-green-700 transition
-                             after:content-[''] after:absolute after:left-0 after:-bottom-1
-                             after:h-[2px] after:w-0 after:bg-green-700 hover:after:w-full after:transition-all">
+          <NavLink to="/cart"  className={({ isActive }) => isActive ? 'active-link' : 'nav-hover' }>
             MyCart
-          </a>
+          </NavLink>
 
-          <a href="#contact"  className="relative px-3 py-1 font-medium text-gray-700 hover:text-green-700 transition
-                             after:content-[''] after:absolute after:left-0 after:-bottom-1
-                             after:h-[2px] after:w-0 after:bg-green-700 hover:after:w-full after:transition-all">
+          <NavLink to="/contact"   className={({ isActive }) => isActive ? 'active-link' : 'nav-hover' }>
             Contact
-          </a>
+          </NavLink>
 
-          <a href="#about"  className="relative px-3 py-1 font-medium text-gray-700 hover:text-green-700 transition
-                             after:content-[''] after:absolute after:left-0 after:-bottom-1
-                             after:h-[2px] after:w-0 after:bg-green-700 hover:after:w-full after:transition-all">
+          <NavLink to="/about"  className={({ isActive }) => isActive ? 'active-link' : 'nav-hover' }>
             About
-          </a>
+          </NavLink>
         </div>
 
         {/* Profile */}

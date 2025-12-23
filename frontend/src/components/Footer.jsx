@@ -3,7 +3,7 @@ import logo from "../assets/GeoCart-Logo.png";
 
 const Footer = () => {
   return (
-    <footer className="bg-gradient-to-r from-green-700 to-green-600 text-white mt-20">
+    <footer className="bg-gradient-to-r from-green-700 to-green-600 text-white mt-8">
 
       {/* Main Footer */}
       <div className="max-w-7xl mx-auto px-6 py-12 grid gap-10 md:grid-cols-4">
