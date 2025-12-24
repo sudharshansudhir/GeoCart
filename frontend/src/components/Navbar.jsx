@@ -1,10 +1,22 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import logo from "../assets/GeoCart-Logo.png";
 import { NavLink } from "react-router-dom";
 import {  AppProvider } from "../context/Context";
 
 const Navbar = () => {
+  
   const {login,setLogin}=useContext(AppProvider)
+  useEffect(()=>{
+    const isloggedin=localStorage.getItem("token")
+  // console.log(isloggedin)
+  if(isloggedin){
+    setLogin(true)
+  }
+  else{
+    setLogin(false)
+  }
+  },[])
+  
   return (
     <nav className="sticky top-0 z-50 bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">

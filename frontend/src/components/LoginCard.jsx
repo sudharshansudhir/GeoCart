@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import logo from "../assets/GeoCart-Logo.png";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const API_BASE = import.meta.env.VITE_URI;
 
 const LoginCard = () => {
+  const navigate=useNavigate()
   const [isLogin, setIsLogin] = useState(true);
 
   
@@ -25,12 +27,21 @@ const LoginCard = () => {
 
   // Placeholder auth functions
   async function authLogin() {
-    const result=await axios.post(`${API_BASE}/api/users/login`,{
+    try{
+      const result=await axios.post(`${API_BASE}/api/users/login`,{
         email:userData.email,
         password:userData.password
-    })
+        })
+        // console.log(result.data)
+        localStorage.setItem("token",result.data.token)
+        alert("Logged In Successfully")
+        navigate("/")
+    }
 
-    console.log(result)
+    catch(e){
+
+    }
+    
   }
 
     //   name:"String",
@@ -41,14 +52,24 @@ const LoginCard = () => {
     // cart:[{type:"String"}]
 
   async function authRegister() {
-    const result=await axios.post(`${API_BASE}/api/users/add`,{
-        name:userData.name,
-        email:userData.email,
-        phonenumber:userData.phone,
-        password:userData.password,
-        address:userData.address,
-    })
-    console.log(result)
+    try{
+        const result=await axios.post(`${API_BASE}/api/users/add`,{
+          name:userData.name,
+          email:userData.email,
+          phonenumber:userData.phone,
+          password:userData.password,
+          address:userData.address,
+        })    
+        localStorage.setItem("token",result.data.token)
+        // console.log(result.data.data)
+        alert("Registered Successfully")
+        navigate("/")
+    }
+
+    catch(e){
+
+    }
+    
   }
 
 

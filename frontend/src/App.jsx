@@ -9,23 +9,25 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ContactPage from './pages/ContactPage'
 import AboutPage from './pages/AboutPage'
+import CartPage from './pages/CartPage'
 
 function App() {
 
   return (
     <>
-    <Navbar/>
+    {/* <Navbar/> */}
       <Routes>
         <Route path='/' Component={HomePage}/>
         <Route path='/profile' Component={ProfilePage}/>
         <Route path='/allproducts' Component={AllProducts}/>
+        <Route path='/cart' Component={CartPage}/>
         <Route path='/admin' Component={AdminPage}/>
         <Route path='/login' Component={LoginPage}/>
         <Route path='/payment' Component={PaymentPage}/>
         <Route path='/contact' Component={ContactPage}/>
         <Route path='/about' Component={AboutPage}/>
       </Routes>
-      <Footer/>
+      {/* <Footer/> */}
     </>
   )
 }

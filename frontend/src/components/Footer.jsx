@@ -48,16 +48,12 @@ const Footer = () => {
         <div>
           <h3 className="font-semibold text-lg mb-4">Developer</h3>
           <p className="text-green-100">
-            By<span className="font-semibold text-yellow-300"> Team GeoCart</span>
+            By<span className="font-semibold text-yellow-300"><a href="https://portfolio-ssr-five.vercel.app/"> SSR</a></span>
           </p>
 
-          <p className="text-green-100 mt-2">
-            GeoCart Online Works
-          </p>
-
-          <p className="text-green-100 mt-2">
-            📧 geocart.dev@gmail.com
-          </p>
+          <a href="mailto:ssrskillworks@gmail.com" className="text-green-100 mt-2">
+            📧 ssrskillworks@gmail.com
+          </a>
 {/* 
           <p className="text-green-100 mt-2">
             🌐 GitHub: github.com/geocart
