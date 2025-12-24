@@ -10,6 +10,17 @@ export const getUser=async(req,res)=>{
     }
     return res.send({message:"Failed to fetch the user"})
 }
+export const getOneUser=async(req,res)=>{
+    if(req.logId.id){
+        const user=await User.findById(req.logId.id)
+    console.log(user)
+    if(user){
+        return res.send(user)
+    }
+    }
+    
+    return res.send({message:"Failed to fetch the user"})
+}
 
 export const addUser=async(req,res)=>{
     const {name,email,password,phonenumber,address}=req.body
@@ -45,7 +56,7 @@ export const loginUser=async(req,res)=>{
 }
 
 export const editUser=async(req,res)=>{
-    
+        
 }
 
 export const deleteUser=async(req,res)=>{

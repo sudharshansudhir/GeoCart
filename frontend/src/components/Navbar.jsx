@@ -57,7 +57,7 @@ const Navbar = () => {
         {/* Profile */}
         {login ?
         <div>
-          <NavLink className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition shadow-sm">
+          <NavLink to="/profile" className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition shadow-sm">
             Profile
           </NavLink>
         </div>:

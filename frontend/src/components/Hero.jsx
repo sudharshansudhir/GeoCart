@@ -1,5 +1,6 @@
 import React from "react";
 import hero from "../assets/hero.jpg";
+import { NavLink } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -29,17 +30,17 @@ const Hero = () => {
             best price — fresh, fast, and reliable.
           </p>
 
-          {/* Buttons */}
+          {/* NavLinks */}
           <div className="mt-6 flex gap-4">
-            <button className="bg-green-600 px-6 py-3 rounded-lg font-semibold
+            <NavLink to="/allproducts" className="bg-green-600 px-6 py-3 rounded-lg font-semibold
                                hover:bg-green-700 transition shadow-lg">
               Shop Now
-            </button>
+            </NavLink>
 
-            <button className="border border-white px-6 py-3 rounded-lg font-semibold
+            <NavLink to="/allproducts" className="border border-white px-6 py-3 rounded-lg font-semibold
                                hover:bg-white hover:text-black transition">
               Explore
-            </button>
+            </NavLink>
           </div>
         </div>
       </div>
