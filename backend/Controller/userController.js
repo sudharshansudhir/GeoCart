@@ -55,6 +55,27 @@ export const loginUser=async(req,res)=>{
     return res.send({token:token,data:spec_user,message:"Login Success!"})
 }
 
+export const addToCart=async(req,res)=>{
+    const {id}=req.body
+    const userId=req.logId.id
+    const user=await User.findById(userId)
+    if(user){
+        // console.log(user)
+        const cart=user.cart.find(item=>item.product.toString()==id)
+        if(cart){
+            cart.quantity+=1
+        }
+        else{
+            user.cart.push({product:id,quantity:1})
+        }
+        await user.save()
+    }
+    else{
+        return res.send({message:"No user exist"})
+    }
+    return res.send({message:"Cart fetched successfully",user})
+}
+
 export const editUser=async(req,res)=>{
         
 }

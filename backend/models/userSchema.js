@@ -6,7 +6,14 @@ const user=new mongoose.Schema({
     phonenumber:"String",
     password:"String",
     address:"String",
-    cart:[{type:"String"}]
+    cart:[{
+        product:{
+            type:mongoose.Schema.Types.ObjectId
+        },
+        quantity:{
+            type:Number
+        }
+    }]
 })
 
 

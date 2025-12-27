@@ -6,6 +6,7 @@ const API_BASE = import.meta.env.VITE_URI;
 const AllGrocery = () => {
   const [products, setProducts] = useState([]);
   const [counts, setCounts] = useState({});
+  const [cart,setCart]=useState()
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
 
@@ -14,6 +15,14 @@ const AllGrocery = () => {
       try {
         const groceries = await axios.get(`${API_BASE}/api/products/`);
         setProducts(groceries.data);
+        const user=await axios.get(`${API_BASE}/api/users`,{
+          headers:{
+            Authorization:localStorage.getItem("token")
+          }
+        })
+        setCart(user.data[0].cart)
+        console.log(user.data[0].cart)
+        
       } catch (err) {
         console.error(err);
       }
@@ -22,12 +31,18 @@ const AllGrocery = () => {
   }, []);
 
   /* ---------- Count Logic ---------- */
-  const increment = (id) => {
+  async function increment(id) {
+    const response=await axios.patch(`${API_BASE}/api/users/cart`,{id},{
+      headers:{
+        Authorization:localStorage.getItem("token")
+      }
+    })
+    console.log(response.data)
     setCounts((prev) => ({
       ...prev,
       [id]: (prev[id] || 0) + 1,
     }));
-  };
+  }
 
   const decrement = (id) => {
     setCounts((prev) => ({
@@ -123,11 +138,15 @@ const AllGrocery = () => {
                         −
                       </button>
 
-                      <span className="font-semibold text-lg">{count}</span>
+                      <span className="font-semibold text-lg">{
+                        cart?
+                        cart.find(itemi=>itemi.product==item._id)?.quantity || 0                      
+                        : 0
+                        }</span>
 
                       <button
                         className="text-lg font-bold px-2 hover:text-green-600"
-                        onClick={() => increment(item._id)}
+                        onClick={() =>{increment(item._id),(cart?cart.find(itemi=>itemi.product==item._id)?.quantity || 0:0)+1}}
                       >
                         +
                       </button>
