@@ -2,17 +2,22 @@ import jwt from 'jsonwebtoken'
 // const bcrypt=require('bcrypt')
 
 export const isauth=(req,res,next)=>{
-        
+    const token=req.header("Authorization")?.replace("Bearer ", "")    
     try{
-        const token=req.header("Authorization")?.replace("Bearer ", "")
+        
         if(token){
             req.logId=jwt.verify(token,process.env.SECRET_KEY)
             console.log(req.logId)
+            next()
         }
-        next()
+        else{
+            return res.status(404).send({message:"Please Login first"})
+        }
     }
     catch(e){
-        console.log(e)
+        console.log(process.env.SECRET_KEY)
+        console.log(token)
+        console.log("...",e)
     }
     
 

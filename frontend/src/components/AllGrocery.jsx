@@ -1,27 +1,30 @@
 import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const API_BASE = import.meta.env.VITE_URI;
 
 const AllGrocery = () => {
   const [products, setProducts] = useState([]);
-  const [counts, setCounts] = useState({});
+  const [counts, setCounts] = useState();
   const [cart,setCart]=useState()
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+  const navigate=useNavigate()
 
   useEffect(() => {
     async function fetchProducts() {
       try {
         const groceries = await axios.get(`${API_BASE}/api/products/`);
         setProducts(groceries.data);
-        const user=await axios.get(`${API_BASE}/api/users`,{
+        const user=await axios.get(`${API_BASE}/api/users/user`,{
           headers:{
             Authorization:localStorage.getItem("token")
           }
         })
-        setCart(user.data[0].cart)
-        console.log(user.data[0].cart)
+        console.log(user.data)
+        setCart(user.data.cart)
+        console.log(user.data.cart)
         
       } catch (err) {
         console.error(err);
@@ -32,24 +35,80 @@ const AllGrocery = () => {
 
   /* ---------- Count Logic ---------- */
   async function increment(id) {
-    const response=await axios.patch(`${API_BASE}/api/users/cart`,{id},{
-      headers:{
-        Authorization:localStorage.getItem("token")
+  try {
+    const response = await axios.patch(
+      `${API_BASE}/api/users/add/cart`,
+      { id },
+      {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
       }
-    })
-    console.log(response.data)
-    setCounts((prev) => ({
-      ...prev,
-      [id]: (prev[id] || 0) + 1,
-    }));
-  }
+    );
+    if(response.status==404){      
+    navigate("/login")
+    }
 
-  const decrement = (id) => {
-    setCounts((prev) => ({
-      ...prev,
-      [id]: prev[id] > 0 ? prev[id] - 1 : 0,
-    }));
-  };
+    // Update cart locally
+     setCart((prevCart) => {
+      const existingItem = prevCart.find(
+        (item) => item.product === id
+      );
+
+      // 🔹 Case 1: Already in cart → increment
+      if (existingItem) {
+        return prevCart.map((item) =>
+          item.product === id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+
+      // 🔹 Case 2: First time add → push new item
+      return [
+        ...prevCart,
+        { product: id, quantity: 1 }
+      ];
+    });
+  } catch (err) {
+    // console.error(err);
+    navigate("/login")
+  }
+}
+  async function decrement(id) {
+  try {
+    const response = await axios.patch(
+      `${API_BASE}/api/users/remove/cart`,
+      { id },
+      {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
+    if(response.status==404){      
+    navigate("/login")
+    }
+
+    // Update cart locally
+     setCart((prevCart) => {
+        return prevCart.map((item) =>
+          item.product === id
+            ? { ...item, quantity:item.quantity-1 }
+            : item
+        ).filter((item)=>
+        item.quantity>0
+      );
+
+    });
+  } catch (err) {
+    // console.error(err);    
+    navigate("/login")
+  }
+}
+
+
+ 
 
   /* ---------- Search + Filter Logic ---------- */
   const filteredProducts = useMemo(() => {
@@ -110,7 +169,7 @@ const AllGrocery = () => {
         {/* Products Grid (4 per row) */}
         <div className="px-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredProducts.map((item) => {
-            const count = counts[item._id] || 0;
+            // const count = counts[item._id] || 0;
 
             return (
               <div
@@ -146,7 +205,7 @@ const AllGrocery = () => {
 
                       <button
                         className="text-lg font-bold px-2 hover:text-green-600"
-                        onClick={() =>{increment(item._id),(cart?cart.find(itemi=>itemi.product==item._id)?.quantity || 0:0)+1}}
+                        onClick={() =>increment(item._id)}
                       >
                         +
                       </button>

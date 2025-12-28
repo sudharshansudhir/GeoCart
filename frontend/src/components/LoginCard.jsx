@@ -32,14 +32,20 @@ const LoginCard = () => {
         email:userData.email,
         password:userData.password
         })
-        // console.log(result.data)
-        localStorage.setItem("token",result.data.token)
+        if(result.status!==404){
+          localStorage.setItem("token",result.data.token)
         alert("Logged In Successfully")
         navigate("/")
+        }
+        else{
+        }
+        
     }
 
     catch(e){
-
+      console.log(e.response.data)
+        alert(e.response.data.message)
+      // console.log(e)
     }
     
   }

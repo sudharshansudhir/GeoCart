@@ -42,16 +42,36 @@ const ProfileCard = () => {
         payload.email=email
         payload.phonenumber=phonenumber
         payload.address=address
-        const response=await axios.patch(`${API_BASE}/users/edituser`,{editId:id,payload},{
+        const response=await axios.patch(`${API_BASE}/api/users/edit`,{editId:id,payload},{
             headers:{
                 Authorization:localStorage.getItem("token")
             }
         })
         console.log(response.data)
+        setIsEditing(!isEditing)
+        alert("Edited Successfully")
     }   
     catch(e) {
-
+      console.log(e)
     }
+  }
+
+  async function deleteUser(id) {
+    try{
+      const data=await axios.delete(`${API_BASE}/api/users/delete/${id}`,{
+        headers:{
+          Authorization:localStorage.getItem("token")
+        }
+      }
+      )
+      alert("Deleted Successfully")
+      localStorage.clear("token")
+      navigate("/login")
+    }
+    catch(e){
+      console.log(e)
+    }
+    
   }
 
 
@@ -162,13 +182,7 @@ const ProfileCard = () => {
             />
           </div>
         </div>
-
-            </>})}
-            
-            {/* Form Grid */}
-        
-        {/* Divider */}
-        <div className="my-12 h-px bg-gradient-to-r from-transparent via-green-300 to-transparent"></div>
+<div className="my-12 h-px bg-gradient-to-r from-transparent via-green-300 to-transparent"></div>
 
         {/* Account Section */}
         <div>
@@ -180,8 +194,13 @@ const ProfileCard = () => {
             <button onClick={()=>{return localStorage.clear("token"),navigate("/login")}} className="px-6 py-3 rounded-xl bg-red-50 text-red-600 font-medium hover:bg-red-100 transition">
               Logout
             </button>
+            <button onClick={()=>deleteUser(item._id)} className="px-6 py-3 rounded-xl bg-red-50 text-red-600 font-medium hover:bg-red-100 transition">
+              Delete Account
+            </button>
           </div>
         </div>
+            </>})}
+        
 
       </div>
     </div>
