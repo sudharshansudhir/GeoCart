@@ -1,8 +1,15 @@
 import React from 'react'
+import AdminNavbar from '../components/AdminNavbar'
+import Stocks from '../components/Stocks'
+import Users from '../components/Users'
 
 const AdminPage = () => {
   return (
-    <div>AdminPage</div>
+    <div>
+      <AdminNavbar/>
+      <Stocks/>
+      <Users/>
+    </div>
   )
 }
 

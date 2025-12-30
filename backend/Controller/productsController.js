@@ -19,8 +19,20 @@ export const addProducts=async(req,res)=>{
     return res.send({message:"Failed to insert the new product"})
 }
 
-export const editProducts=async(req,res)=>{
+export const toggleStock=async(req,res)=>{
+    const id=req.params.id
+    const item=await Products.findById(id)
+    if(item){
+        item.inStock= !(item.inStock)
+        await item.save()
+        console.log("Stock of ",id,"is ",item.inStock)
+    }
     
+}
+
+
+export const editProducts=async(req,res)=>{
+        
 }
 
 export const deleteProducts=async(req,res)=>{

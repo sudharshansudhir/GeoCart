@@ -16,6 +16,7 @@ const MyCart = () => {
             Authorization: localStorage.getItem("token"),
           },
         });
+        console.log(user)
 
         const groceries = await axios.get(`${API_BASE}/api/products/`);
 

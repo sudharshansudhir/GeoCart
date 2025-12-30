@@ -72,6 +72,7 @@ const AllGrocery = () => {
     });
   } catch (err) {
     // console.error(err);
+      alert("Please Login first") 
     navigate("/login")
   }
 }
@@ -86,7 +87,9 @@ const AllGrocery = () => {
         },
       }
     );
-    if(response.status==404){      
+    if(response.status==404){  
+      
+      // alert("Please Login first")     
     navigate("/login")
     }
 
@@ -102,6 +105,8 @@ const AllGrocery = () => {
 
     });
   } catch (err) {
+    
+      alert("Please Login first") 
     // console.error(err);    
     navigate("/login")
   }

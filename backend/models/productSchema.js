@@ -9,6 +9,11 @@ const products=new mongoose.Schema({
     img:"String",
     shop_address:"String",
     exp_date:"String",
+    inStock:{
+        type:Boolean,
+        
+  default: false
+    },
     quantity:"String"
 })
 
