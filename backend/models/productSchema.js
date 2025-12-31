@@ -11,7 +11,7 @@ const products=new mongoose.Schema({
         type:Boolean,      
         default: false
     },
-    quantity:Number
+    quantity:"String"
 })
 
 

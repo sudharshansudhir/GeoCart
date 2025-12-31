@@ -4,8 +4,6 @@ import fs from "fs";
 
 export const getProducts=async(req,res)=>{
     const allProduct=await Products.find()
-    console.log("Cloud name:", process.env.CLOUDINARY_CLOUD_NAME);
-console.log("API key:", process.env.CLOUDINARY_API_KEY);
     if(allProduct.length==0){
         return res.send({message:"Data not found"})
     }
@@ -67,10 +65,24 @@ export const toggleStock=async(req,res)=>{
 
 
 export const editProducts=async(req,res)=>{
-        
+      const payload=req.body.payload
+      const id=req.body.id
+      const spec_item=await Products.findByIdAndUpdate(id,{$set:payload},{new:true})
+      if(spec_item){
+        await spec_item.save()
+        return res.send({message:"Successfully Edited the Product"})
+      }
+      else{
+        return res.status(404).send({message:"Error in editing"})
+      }
+
 }
 
 export const deleteProducts=async(req,res)=>{
-
+  const id=req.params.id
+  const data=await Products.findByIdAndDelete(id)
+  if(data){
+    return res.send({message:"Product Deleted Successfully"})
+  }
+  return res.status(404).send({message:"Error while Deleting"})
 }
-// export default {addProducts,getProducts,deleteProducts,editProducts}

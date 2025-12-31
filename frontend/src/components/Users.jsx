@@ -5,6 +5,8 @@ const API_BASE = import.meta.env.VITE_URI;
 
 const Users = () => {
   const [users, SetUsers] = useState([]);
+  const [hoveredUser, setHoveredUser] = useState(null);
+
 
   useEffect(() => {
     async function fetchUser() {
@@ -18,12 +20,29 @@ const Users = () => {
     fetchUser();
   }, []);
 
+  async function deleteUser(id){
+    try{
+      const res=await axios.delete(`${API_BASE}/api/users/delete/${id}`,{
+      headers:{
+        Authorization:localStorage.getItem("token")
+      }
+    })
+    if(res.status!=404){
+      alert("User Deleted Successfully")
+    }
+    }
+    catch(e){
+      console.log(">>>",e)
+    }
+    
+  }
+
   return (
     <div className="flex-1 bg-green-50">
       <div className="w-full md:p-10 p-4">
         <div className="flex justify-center items-center">
           <h2 className="text-3xl font-semibold text-green-700 mb-6">
-            Users Management
+            Customers Management
           </h2>
         </div>
 
@@ -31,10 +50,12 @@ const Users = () => {
           <table className="w-full table-auto">
             <thead className="bg-green-700 text-white text-sm">
               <tr>
-                <th className="px-4 py-3 font-semibold">Username</th>
+                <th className="px-4 py-3 font-semibold">Customer name</th>
                 <th className="px-4 py-3 font-semibold">Address</th>
                 <th className="px-4 py-3 font-semibold">Phone No</th>
                 <th className="px-4 py-3 font-semibold">Email</th>
+                <th className="px-4 py-3 font-semibold">Action</th>
+
               </tr>
             </thead>
 
@@ -43,20 +64,31 @@ const Users = () => {
                 users.map((user) => (
                   <tr
                     key={user._id}
+                      onMouseEnter={() => setHoveredUser(user._id)}
+                      onMouseLeave={() => setHoveredUser(null)}
                     className="border-t border-green-200 hover:bg-green-100 transition"
                   >
-                    <td className="px-4 py-3 font-medium">
+                    <td className="px-4 py-3 font-medium  text-center">
                       {user.name}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3  text-center">
                       {user.address || "—"}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3  text-center">
                       {user.phonenumber || "—"}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 text-center">
                       {user.email}
                     </td>
+                    <td className="px-4 py-3 text-center">
+  {hoveredUser === user._id && (
+    <button onClick={()=>deleteUser(user._id)}
+      className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 transition"
+    >
+      Delete
+    </button>
+  )}
+</td>
                   </tr>
                 ))
               ) : (

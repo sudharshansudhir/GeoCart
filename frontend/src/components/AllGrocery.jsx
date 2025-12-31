@@ -16,7 +16,9 @@ const AllGrocery = () => {
     async function fetchProducts() {
       try {
         const groceries = await axios.get(`${API_BASE}/api/products/`);
-        setProducts(groceries.data);
+        console.log(groceries.data)
+        const avail=groceries.data.filter((item)=>item.inStock==true)
+        setProducts(avail);
         const user=await axios.get(`${API_BASE}/api/users/user`,{
           headers:{
             Authorization:localStorage.getItem("token")

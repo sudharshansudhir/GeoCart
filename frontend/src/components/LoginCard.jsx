@@ -32,13 +32,27 @@ const LoginCard = () => {
         email:userData.email,
         password:userData.password
         })
-        if(result.status!==404){
+        console.log(result)
+        if(result.data.isAdmin){
           localStorage.setItem("token",result.data.token)
+          localStorage.setItem("isAdmin",true)
+          localStorage.setItem("isUser",false)
+        alert("Welcome Admin")
+          navigate("/admin")
+        }
+        else{
+          if(result.status!==404){
+          localStorage.setItem("token",result.data.token)
+          localStorage.setItem("isUser",true)
+          localStorage.setItem("isAdmin",false)
         alert("Logged In Successfully")
         navigate("/")
         }
         else{
         }
+        }
+        
+        
         
     }
 
@@ -50,12 +64,6 @@ const LoginCard = () => {
     
   }
 
-    //   name:"String",
-    // email:"String",
-    // phonenumber:"String",
-    // password:"String",
-    // address:"String",
-    // cart:[{type:"String"}]
 
   async function authRegister() {
     try{
@@ -66,14 +74,26 @@ const LoginCard = () => {
           password:userData.password,
           address:userData.address,
         })    
-        localStorage.setItem("token",result.data.token)
-        // console.log(result.data.data)
+        if(result.status!=404){
+          localStorage.setItem("token",result.data.token)
+          localStorage.setItem("isUser",true)
+          localStorage.setItem("isAdmin",false)
+          setUserData({
+                name: "",
+                email: "",
+                password: "",
+                confirmPassword: "",
+                address: "",
+                phone: "",
+          })
         alert("Registered Successfully")
         navigate("/")
+        }
+          
     }
 
     catch(e){
-
+      alert(e.response.data.message)
     }
     
   }

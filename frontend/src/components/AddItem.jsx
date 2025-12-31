@@ -31,7 +31,11 @@ formData.append("quantity", quantity);
 formData.append("inStock", inStock);
 formData.append("img", img);
 
-const data= await axios.post(`${API_BASE}/api/products/add`, formData);
+const data= await axios.post(`${API_BASE}/api/products/add`, formData,{
+  headers:{
+    Authorization:localStorage.getItem("token")
+  }
+});
 
         // console.log(name,price,brand,category,exp_date,quantity)
         // const data=await axios.post(`${API_BASE}/api/products/add`,{name,price,brand,category,img,exp_date,inStock,quantity})
@@ -111,7 +115,7 @@ const data= await axios.post(`${API_BASE}/api/products/add`, formData);
               />
 
               <input  value={quantity} onChange={(e)=>setquantity(e.target.value)}
-                type="number"
+                type="text"
                 placeholder="Quantity"
                 className="border border-green-300 rounded px-3 py-2"
               />
