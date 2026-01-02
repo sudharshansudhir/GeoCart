@@ -9,6 +9,8 @@ const AddItem = () => {
 const [name,setName]=useState("")
 const [price,setprice]=useState("")
 const [brand,setbrand]=useState("")
+const [capacity,setcapacity]=useState()
+
 const [category,setcategory]=useState("")
 const [img,setimg]=useState(null)
 const [exp_date,setexp_date]=useState("")
@@ -28,6 +30,7 @@ formData.append("brand", brand);
 formData.append("category", category);
 formData.append("exp_date", exp_date);
 formData.append("quantity", quantity);
+formData.append("capacity", capacity);
 formData.append("inStock", inStock);
 formData.append("img", img);
 
@@ -46,6 +49,7 @@ const data= await axios.post(`${API_BASE}/api/products/add`, formData,{
     setprice("")
     setbrand("")
     setcategory("")
+    setcapacity()
     setimg(null)
     setexp_date("")
     setquantity("")
@@ -117,6 +121,10 @@ const data= await axios.post(`${API_BASE}/api/products/add`, formData,{
               <input  value={quantity} onChange={(e)=>setquantity(e.target.value)}
                 type="text"
                 placeholder="Quantity"
+                className="border border-green-300 rounded px-3 py-2"
+              />
+              <input  value={capacity} onChange={(e)=>setcapacity(e.target.value)}
+                type="Number" placeholder="Total Stocks"
                 className="border border-green-300 rounded px-3 py-2"
               />
 

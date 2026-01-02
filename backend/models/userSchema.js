@@ -13,6 +13,20 @@ const user=new mongoose.Schema({
         quantity:{
             type:Number
         }
+    }],
+    orders:[{
+        paymentId:{
+            type:"String"
+        },
+        product:{
+            type:mongoose.Schema.Types.ObjectId
+        },
+        quantity:{
+            type:Number
+        },
+        amount:{
+            type:Number
+        },
     }]
 })
 

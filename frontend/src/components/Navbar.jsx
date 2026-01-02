@@ -52,6 +52,12 @@ const Navbar = () => {
           <NavLink to="/about"  className={({ isActive }) => isActive ? 'active-link' : 'nav-hover' }>
             About
           </NavLink>
+          {login && 
+        <NavLink to="/orders"  className={({ isActive }) => isActive ? 'active-link' : 'nav-hover' }>
+            My Orders
+          </NavLink>
+
+          }
         </div>
 
         {/* Profile */}

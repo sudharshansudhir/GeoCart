@@ -2,6 +2,9 @@ import dotenv from "dotenv"
 dotenv.config() 
 import express  from "express"
 import cors from "cors"
+import paymentRoutes from "./routes/payment.js";
+
+
 
 import mongoose from "mongoose"
 
@@ -26,7 +29,7 @@ app.get("/",(req,res)=>{
 
 app.use("/api/users",userRoutes)
 app.use("/api/products",productRoutes)
-
+app.use("/api/payment", paymentRoutes);
 app.listen(PORT,()=>{
     console.log(`Server running at PORT ${PORT}`)
 })
