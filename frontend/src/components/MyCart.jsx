@@ -95,11 +95,15 @@ const MyCart = () => {
   }
 
   return (
-    <div className="flex justify-center">
+<div className="flex justify-center">
       <div className="bg-white rounded-xl my-6 w-[92%] py-6">
-    {cart?<><h2 className="px-10 text-xl font-bold mb-6">
+    {cart.length>0?
+    
+          <><h2 className="px-10 text-xl font-bold mb-6">
           My Cart ({cart.length})
-        </h2><div className="px-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        </h2>
+        
+        <div className="px-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {cart.map((item) => {
               const product = getProduct(item.product);
               if (!product) return null;
@@ -164,15 +168,16 @@ const MyCart = () => {
                 </div>
               );
             })}
-          </div></>:(
-          <div className="text-center text-gray-500 py-10">
+          </div></>:
+          <div className="flex justify-center text-2xl items-center text-gray-500 h-[70vh] py-10">
             Your cart is empty 🛒
           </div>
-        ) }
+       }
         
 
       </div>
     </div>
+    
   );
 };
 

@@ -33,7 +33,22 @@ const [exp_date,setexp_date]=useState()
   }, []);
 
   async function toggleStock(id) {
-    await axios.patch(`${API_BASE}/api/products/edit/${id}`);
+    try{
+    // console.log(localStorage.getItem("token"))
+    const token=localStorage.getItem("token")
+
+ const resp=await axios.patch(`${API_BASE}/api/products/edit/${id}`,{},{
+      headers:{
+        Authorization:`${token}`
+      }
+    });
+    // console.log(resp)
+    }
+    catch(e){
+      console.log("E",e)
+    }
+
+   
   }
 
   async function editData(id) {

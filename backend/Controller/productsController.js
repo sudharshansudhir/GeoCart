@@ -58,7 +58,7 @@ export const toggleStock=async(req,res)=>{
     if(item){
         item.inStock= !(item.inStock)
         await item.save()
-        console.log("Stock of ",id,"is ",item.inStock)
+        // console.log("Stock of ",id,"is ",item.inStock)
     }
     
 }

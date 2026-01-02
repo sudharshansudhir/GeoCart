@@ -45,16 +45,17 @@ export const loginUser=async(req,res)=>{
     if(email==process.env.ADMIN_ID && password==process.env.ADMIN_PASSWORD){
         console.log("Hi admin")
         const token=jwt.sign({email,isAdmin:true},process.env.ADMIN_SECRET_KEY)
+        // console.log(token)
         return res.send({token,isAdmin:true,message:"Welcome Admin!"})
     }
     else{
     const spec_user=await User.findOne({email})
-    console.log(spec_user)
+    // console.log(spec_user)
     if(!spec_user){
         return res.status(404).send({message:"Please register first to continue!"})       
     }
     const rehashed=bcrypt.compare(password,spec_user.password)
-    console.log(rehashed,password)
+    // console.log(rehashed,password)
     if(!rehashed){
         return res.status(404).send({message:"Invalid password"})
     }
