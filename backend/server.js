@@ -3,6 +3,7 @@ dotenv.config()
 import express  from "express"
 import cors from "cors"
 import paymentRoutes from "./routes/payment.js";
+import bcrypt from 'bcrypt'
 
 
 

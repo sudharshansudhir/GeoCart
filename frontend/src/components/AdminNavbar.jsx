@@ -1,23 +1,32 @@
-import React from 'react'
-
-import logo from "../assets/GeoCart-Logo.png"
-import { NavLink, useNavigate } from 'react-router-dom'
+import React from "react";
+import logo from "../assets/GeoCart-Logo.png";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const AdminNavbar = () => {
-//   const navigate=useNavigate()
-  async function logouthandle(){
-    localStorage.removeItem("token")
-    localStorage.removeItem("isAdmin")
-    localStorage.removeItem("isUser")
-    navigate("/login")
-  }
-  return (
-    <div className='flex p-2 bg-green-300 justify-between top-0 fixed w-full z-20 items-center'>
-        <img src={logo} alt="logo" className='w-20'  />
-        <div className='text-3xl text-black font-bold'>ADMIN DASHBOARD</div>
-        <NavLink to="/login" onClick={()=>logouthandle()} className="px-3 py-1 border border-black rounded-md bg-green-700 hover:bg-[#c10404ff] hover-border-[#000000] text-xl">Logout</NavLink>
-    </div>
-  )
-}
+  const navigate = useNavigate();
 
-export default AdminNavbar
+  function logouthandle() {
+    localStorage.clear();
+    navigate("/login");
+  }
+
+  return (
+    <div className="fixed top-0 z-20 w-full bg-green-300 px-4 py-2 flex items-center justify-between">
+      <img src={logo} alt="logo" className="w-14 md:w-20" />
+
+      <div className="text-lg md:text-3xl font-bold text-black text-center flex-1">
+        ADMIN DASHBOARD
+      </div>
+
+      <NavLink
+        to="/login"
+        onClick={logouthandle}
+        className="px-3 py-1 bg-green-700 text-white rounded-md text-sm md:text-lg hover:bg-red-600"
+      >
+        Logout
+      </NavLink>
+    </div>
+  );
+};
+
+export default AdminNavbar;

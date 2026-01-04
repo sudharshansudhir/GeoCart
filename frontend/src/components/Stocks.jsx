@@ -5,322 +5,252 @@ const API_BASE = import.meta.env.VITE_URI;
 
 const Stocks = () => {
   const [products, setProducts] = useState([]);
-const [editingId, setEditingId] = useState(null);
-const [name,setname]=useState()
-const [brand,setbrand]=useState()
-const [price,setprice]=useState()
-const [quantity,setquantity]=useState()
-const [category,setcategory]=useState()
-const [exp_date,setexp_date]=useState()
+  const [editingId, setEditingId] = useState(null);
 
-// {
-//   name:"",
-//   brand:"",
-//   exp_date:"",
-//   quantity:"",
-//   price:"",
-//   inStock:""
-// }
-
+  const [name, setname] = useState();
+  const [brand, setbrand] = useState();
+  const [price, setprice] = useState();
+  const [quantity, setquantity] = useState();
+  const [category, setcategory] = useState();
+  const [exp_date, setexp_date] = useState();
 
   useEffect(() => {
     async function fetchProducts() {
       const stocks = await axios.get(`${API_BASE}/api/products`);
       setProducts(stocks.data);
-
     }
     fetchProducts();
   }, []);
 
   async function toggleStock(id) {
-    try{
-    // console.log(localStorage.getItem("token"))
-    const token=localStorage.getItem("token")
-
- const resp=await axios.patch(`${API_BASE}/api/products/edit/${id}`,{},{
-      headers:{
-        Authorization:`${token}`
-      }
-    });
-    // console.log(resp)
-    }
-    catch(e){
-      console.log("E",e)
-    }
-
-   
+    const token = localStorage.getItem("token");
+    await axios.patch(
+      `${API_BASE}/api/products/edit/${id}`,
+      {},
+      { headers: { Authorization: token } }
+    );
   }
 
   async function editData(id) {
-    const data=products.find((item)=>item._id==id)
-    console.log(data)  
-    setname(data.name)
-    setbrand(data.brand)
-    setquantity(data.quantity)
-    setcategory(data.category)
-    setprice(data.price)
-    setexp_date(data.exp_date)
+    const data = products.find((item) => item._id === id);
+    setname(data.name);
+    setbrand(data.brand);
+    setquantity(data.quantity);
+    setcategory(data.category);
+    setprice(data.price);
+    setexp_date(data.exp_date);
   }
 
-   async function saveData(id) {
-      const payload={
-      name:name,
-      brand:brand,
-      quantity:quantity,
-      category:category,
-      price:price,
-      exp_date:exp_date
+  async function saveData(id) {
+    const payload = { name, brand, quantity, category, price, exp_date };
+    const response = await axios.patch(
+      `${API_BASE}/api/products/edit`,
+      { id, payload },
+      { headers: { Authorization: localStorage.getItem("token") } }
+    );
+    if (response.status !== 404) {
+      alert("Successfully Edited the Product");
+      setEditingId(null);
     }
-    console.log(payload)
-   const response=await axios.patch(`${API_BASE}/api/products/edit`,{id,payload},{
-    headers:{
-      Authorization:localStorage.getItem("token")
-    }
-   })     
-   if(response.status!=404){
-    alert("SuccessFully Edited the Product")
-    setEditingId(null)
-   }
   }
 
   async function deleteProduct(id) {
-    const response=await axios.delete(`${API_BASE}/api/products/delete/${id}`,{
-      headers:{
-        Authorization:localStorage.getItem("token")
-      }
-    })
-    if(response.status!=404){
-      alert("Product Deleted Successfully")
+    const response = await axios.delete(
+      `${API_BASE}/api/products/delete/${id}`,
+      { headers: { Authorization: localStorage.getItem("token") } }
+    );
+    if (response.status !== 404) {
+      alert("Product Deleted Successfully");
     }
-    
   }
 
   return (
-    <>
-      {products && (
-        <div className="flex-1 mt-10 pt-10 bg-green-50">
-          <div className="w-full md:p-10 p-4">
-            <div className="flex justify-center items-center">
-            <h2 className="text-3xl font-semibold text-green-700 mb-6">
-              Stocks Management
-            </h2>
-            </div>
+    <div className="flex-1 mt-10 pt-10 bg-green-50">
+      <div className="w-full p-4 md:p-10">
+        <h2 className="text-2xl md:text-3xl font-semibold text-green-700 mb-6 text-center">
+          Stocks Management
+        </h2>
 
-            <div className="flex justify-center items-center w-full overflow-hidden rounded-lg bg-white border border-green-300 shadow">
-              <table className="w-full  table-auto">
-                <thead className="bg-green-700 text-white text-sm">
-  <tr>
-    <th className="px-4 py-3 w-[15%] font-semibold">Product</th>
-    <th className="px-4 py-3 w-[12%] font-semibold">Brand</th>
-    <th className="px-4 py-3 w-[12%] font-semibold">Expiry</th>
-    <th className="px-4 py-3 w-[12%] font-semibold">Category</th>
-    <th className="px-4 py-3 w-[12%] font-semibold">Quantity</th>
-    <th className="px-4 py-3 w-[12%] font-semibold">Price</th>
-    <th className="px-4 py-3 w-[13%] font-semibold text-center">Availability</th>
-    <th className="w-[12%]"></th>
-  </tr>
-</thead>
+        {/* TABLE WRAPPER */}
+        <div className="overflow-x-auto bg-white border border-green-300 rounded-lg shadow">
+          <table className="min-w-[900px] w-full table-auto text-sm">
+            <thead className="bg-green-700 text-white">
+              <tr>
+                <th className="px-4 py-3">Product</th>
+                <th className="px-4 py-3">Brand</th>
+                <th className="px-4 py-3">Expiry</th>
+                <th className="px-4 py-3">Category</th>
+                <th className="px-4 py-3">Qty</th>
+                <th className="px-4 py-3">Price</th>
+                <th className="px-4 py-3 text-center">Status</th>
+                <th className="px-4 py-3 text-center">Actions</th>
+              </tr>
+            </thead>
 
-                <tbody className="text-sm text-gray-700">
-  {products.map((product) => {
-    const isEditing = editingId === product._id;
+            <tbody className="text-gray-700">
+              {products.map((product) => {
+                const isEditing = editingId === product._id;
 
-    return (
-      <tr
-        key={product._id}
-        className="group border-t border-green-200 hover:bg-green-100 transition relative"
-      >
-        {/* Product Name */}
-        <td className="px-4 py-3 flex items-center gap-3">
-          <div className="border border-green-300 rounded overflow-hidden">
-            {isEditing?<></>
-            : <img
-              src={product.img}
-              alt={product.name}
-              className="w-14 h-14 object-cover"
-            />}
-           
-          </div>
+                return (
+                  <tr
+                    key={product._id}
+                    className="border-t border-green-200 hover:bg-green-100 transition"
+                  >
+                    {/* PRODUCT */}
+                    <td className="px-4 py-3 flex items-center gap-3">
+                      {!isEditing && (
+                        <img
+                          src={product.img}
+                          alt={product.name}
+                          className="w-12 h-12 object-cover rounded border"
+                        />
+                      )}
 
-          {isEditing ? (
-            <input
-              type="text"
-              value={name}
-              onChange={(e)=>setname(e.target.value)}
-              className="border px-2 py-1 rounded"
-            />
-          ) : (
-            <span className="font-medium">{product.name}</span>
-          )}
-        </td>
+                      {isEditing ? (
+                        <input
+                          value={name}
+                          onChange={(e) => setname(e.target.value)}
+                          className="border px-2 py-1 rounded w-32"
+                        />
+                      ) : (
+                        <span className="font-medium">{product.name}</span>
+                      )}
+                    </td>
 
-        {/* Brand (view only) */}
-        <td className="px-4 py-3">
-          
-          <div className="flex items-center justify-center gap-3">
-          {isEditing ? (
-            <input
-              type="text"
-              value={brand}
-              onChange={(e)=>setbrand(e.target.value)}
-              
-              className="border px-2 py-1 rounded w-20"
-            />
-          ) : (
-            product.brand
-          )}
-            </div>
-        </td>
-        
-        <td className="px-4 py-3">
-          
-          <div className="flex items-center justify-center gap-3">
-          {isEditing ? (
-            <input
-              type="date"
-                            value={exp_date}
-              onChange={(e)=>setexp_date(e.target.value)}
-              
-              className="border px-2 py-1 rounded w-20"
-            />
-          ) : (
-            product.exp_date
-          )}
-          </div>
-        </td>
+                    {/* BRAND */}
+                    <td className="px-4 py-3 text-center">
+                      {isEditing ? (
+                        <input
+                          value={brand}
+                          onChange={(e) => setbrand(e.target.value)}
+                          className="border px-2 py-1 rounded w-24"
+                        />
+                      ) : (
+                        product.brand
+                      )}
+                    </td>
 
-        <td className="px-4 py-3">
-          
-          <div className="flex items-center justify-center gap-3">
-          {isEditing ? (
-            <input
-              type="text"
-              value={category}
-              onChange={(e)=>setcategory(e.target.value)}
-              
-              className="border px-2 py-1 rounded w-20"
-            />
-          ) : (
-            product.category
-          )}
-          </div>
-        </td>
+                    {/* EXPIRY */}
+                    <td className="px-4 py-3 text-center">
+                      {isEditing ? (
+                        <input
+                          type="date"
+                          value={exp_date}
+                          onChange={(e) => setexp_date(e.target.value)}
+                          className="border px-2 py-1 rounded w-28"
+                        />
+                      ) : (
+                        product.exp_date
+                      )}
+                    </td>
 
-        {/* Quantity (editable) */}
-        <td className="px-4 py-3">
-          
-          <div className="flex items-center justify-center gap-3">
-          {isEditing ? (
-            <input
-              type="text"
-              value={quantity}
-              onChange={(e)=>setquantity(e.target.value)}
-              
-              className="border px-2 py-1 rounded w-20"
-            />
-          ) : (
-            product.quantity
-          )}
-          </div>
-        </td>
+                    {/* CATEGORY */}
+                    <td className="px-4 py-3 text-center">
+                      {isEditing ? (
+                        <input
+                          value={category}
+                          onChange={(e) => setcategory(e.target.value)}
+                          className="border px-2 py-1 rounded w-24"
+                        />
+                      ) : (
+                        product.category
+                      )}
+                    </td>
 
-        {/* Price (editable) */}
-        <td className="px-4 py-3">
-          
-          <div className="flex items-center justify-center gap-3">
-          {isEditing ? (
-            <input
-              type="number"
-                            value={price}
-              onChange={(e)=>setprice(e.target.value)}
-              
-              className="border px-2 py-1 rounded w-24"
-            />
-          ) : (
-            `₹${product.price}`
-          )}
-          </div>
-        </td>
+                    {/* QUANTITY */}
+                    <td className="px-4 py-3 text-center">
+                      {isEditing ? (
+                        <input
+                          value={quantity}
+                          onChange={(e) => setquantity(e.target.value)}
+                          className="border px-2 py-1 rounded w-20"
+                        />
+                      ) : (
+                        product.quantity
+                      )}
+                    </td>
 
-        {/* Availability (UNCHANGED toggle) */}
+                    {/* PRICE */}
+                    <td className="px-4 py-3 text-center">
+                      {isEditing ? (
+                        <input
+                          value={price}
+                          onChange={(e) => setprice(e.target.value)}
+                          className="border px-2 py-1 rounded w-24"
+                        />
+                      ) : (
+                        `₹${product.price}`
+                      )}
+                    </td>
 
-        {isEditing ? (
-            <></>
-          ) : (
- <td className="px-4 py-3 text-center">
-          <div className="flex items-center justify-center gap-3">
-            <span
-              className={`px-3 py-1 rounded-full text-xs font-semibold
-              ${
-                product.inStock
-                  ? "bg-green-300 text-green-900"
-                  : "bg-yellow-300 text-yellow-900"
-              }`}
-            >
-              {product.inStock ? "Available" : "Not Available"}
-            </span>
+                    {/* STATUS */}
+                    <td className="px-4 py-3 text-center">
+                      {!isEditing && (
+                        <div className="flex items-center justify-center gap-2">
+                          <span
+                            className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                              product.inStock
+                                ? "bg-green-300 text-green-900"
+                                : "bg-yellow-300 text-yellow-900"
+                            }`}
+                          >
+                            {product.inStock ? "Available" : "Not Available"}
+                          </span>
 
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                className="sr-only peer"
-                defaultChecked={product.inStock}
-                onClick={() => toggleStock(product._id)}
-              />
-              <div className="w-11 h-6 bg-yellow-300 rounded-full peer peer-checked:bg-green-700 transition"></div>
-              <span className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-5"></span>
-            </label>
-          </div>
-        </td>
-          )}
-          <td></td>
-       
+                          <input
+                            type="checkbox"
+                            defaultChecked={product.inStock}
+                            onClick={() => toggleStock(product._id)}
+                          />
+                        </div>
+                      )}
+                    </td>
 
-        {/* Hover Actions */}
-        <td className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition">
-          {!isEditing ? (
-            <div className="flex gap-2">
-              <button
-                onClick={() => {editData(product._id),setEditingId(product._id)}}
-                className="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
-              >
-                Edit
-              </button>
-
-              <button onClick={()=>deleteProduct(product._id)}
-                className="px-3 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700"
-              >
-                Delete
-              </button>
-            </div>
-          ) : (
-            <div className="flex gap-2">
-              <button onClick={()=>saveData(product._id)}
-                className="px-3 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700"
-              >
-                Save
-              </button>
-
-              <button
-                onClick={() => setEditingId(null)}
-                className="px-3 py-1 text-xs bg-gray-400 text-white rounded hover:bg-gray-500"
-              >
-                Cancel
-              </button>
-            </div>
-          )}
-        </td>
-      </tr>
-    );
-  })}
-</tbody>
-
-              </table>
-            </div>
-          </div>
+                    {/* ACTIONS */}
+                    <td className="px-4 py-3 text-center">
+                      {!isEditing ? (
+                        <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                          <button
+                            onClick={() => {
+                              editData(product._id);
+                              setEditingId(product._id);
+                            }}
+                            className="px-3 py-1 text-xs bg-blue-600 text-white rounded"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => deleteProduct(product._id)}
+                            className="px-3 py-1 text-xs bg-red-600 text-white rounded"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                          <button
+                            onClick={() => saveData(product._id)}
+                            className="px-3 py-1 text-xs bg-green-600 text-white rounded"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={() => setEditingId(null)}
+                            className="px-3 py-1 text-xs bg-gray-400 text-white rounded"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-      )}
-    </>
+      </div>
+    </div>
   );
 };
 
