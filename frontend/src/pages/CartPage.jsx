@@ -2,6 +2,7 @@ import React from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import MyCart from '../components/MyCart'
+// import RecipeChatbot from "./components/RecipeChatbot";
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -21,6 +22,9 @@ const CartPage = () => {
     <div>
       <Navbar/>
       <MyCart/>
+
+{/* <RecipeChatbot /> */}
+
     <Footer/>
     </div>
   )

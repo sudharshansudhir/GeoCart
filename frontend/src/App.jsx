@@ -10,6 +10,8 @@ import AboutPage from './pages/AboutPage'
 import CartPage from './pages/CartPage'
 import CheckoutPage from './pages/CheckoutPage'
 import OrdersPage from './pages/OrdersPage'
+import FloatingChatbot from "./components/FloatingChatbot";
+
 
 function App() {
 
@@ -30,6 +32,7 @@ function App() {
         <Route path='/about' Component={AboutPage}/>
       </Routes>
       {/* <Footer/> */}
+      <FloatingChatbot />
     </>
   )
 }

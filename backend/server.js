@@ -4,6 +4,8 @@ import express  from "express"
 import cors from "cors"
 import paymentRoutes from "./routes/payment.js";
 import bcrypt from 'bcrypt'
+import aiRoutes from "./routes/aiRoutes.js";
+
 
 
 
@@ -31,6 +33,8 @@ app.get("/",(req,res)=>{
 app.use("/api/users",userRoutes)
 app.use("/api/products",productRoutes)
 app.use("/api/payment", paymentRoutes);
+app.use("/api/ai", aiRoutes);
+
 app.listen(PORT,()=>{
     console.log(`Server running at PORT ${PORT}`)
 })
