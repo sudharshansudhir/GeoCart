@@ -2,15 +2,18 @@ import React, { useState } from "react";
 import logo from "../assets/GeoCart-Logo.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 const API_BASE = import.meta.env.VITE_URI;
 
 const LoginCard = () => {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
 
-  
+  // 👁️ Password toggle states
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // State to store user input
   const [userData, setUserData] = useState({
     name: "",
     email: "",
@@ -20,97 +23,78 @@ const LoginCard = () => {
     phone: "",
   });
 
-  // Handle input changes
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
 
-  // Placeholder auth functions
   async function authLogin() {
-    try{
-      const result=await axios.post(`${API_BASE}/api/users/login`,{
-        email:userData.email,
-        password:userData.password
-        })
-        console.log(result)
-        if(result.data.isAdmin){
-          localStorage.setItem("token",result.data.token)
-          localStorage.setItem("isAdmin",true)
-          localStorage.setItem("isUser",false)
-        alert("Welcome Admin")
-          navigate("/admin")
-        }
-        else{
-          if(result.status!==404){
-          localStorage.setItem("token",result.data.token)
-          localStorage.setItem("isUser",true)
-          localStorage.setItem("isAdmin",false)
-        alert("Logged In Successfully")
-        navigate("/")
-        }
-        else{
-        }
-        }
-        
-        
-        
-    }
+    try {
+      const result = await axios.post(`${API_BASE}/api/users/login`, {
+        email: userData.email,
+        password: userData.password,
+      });
 
-    catch(e){
-      console.log(e.response.data)
-        alert(e.response.data.message)
-      // console.log(e)
+      if (result.data.isAdmin) {
+        localStorage.setItem("token", result.data.token);
+        localStorage.setItem("isAdmin", true);
+        localStorage.setItem("isUser", false);
+        alert("Welcome Admin");
+        navigate("/admin");
+      } else {
+        localStorage.setItem("token", result.data.token);
+        localStorage.setItem("isUser", true);
+        localStorage.setItem("isAdmin", false);
+        alert("Logged In Successfully");
+        navigate("/");
+      }
+    } catch (e) {
+      alert(e.response?.data?.message);
     }
-    
   }
-
 
   async function authRegister() {
-    try{
-        const result=await axios.post(`${API_BASE}/api/users/add`,{
-          name:userData.name,
-          email:userData.email,
-          phonenumber:userData.phone,
-          password:userData.password,
-          address:userData.address,
-        })    
-        if(result.status!=404){
-          localStorage.setItem("token",result.data.token)
-          localStorage.setItem("isUser",true)
-          localStorage.setItem("isAdmin",false)
-          setUserData({
-                name: "",
-                email: "",
-                password: "",
-                confirmPassword: "",
-                address: "",
-                phone: "",
-          })
-        alert("Registered Successfully")
-        navigate("/")
-        }
-          
-    }
+    try {
+      const result = await axios.post(`${API_BASE}/api/users/add`, {
+        name: userData.name,
+        email: userData.email,
+        phonenumber: userData.phone,
+        password: userData.password,
+        address: userData.address,
+      });
 
-    catch(e){
-      alert(e.response.data.message)
+      if (result.status !== 404) {
+        localStorage.setItem("token", result.data.token);
+        localStorage.setItem("isUser", true);
+        localStorage.setItem("isAdmin", false);
+
+        setUserData({
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          address: "",
+          phone: "",
+        });
+
+        alert("Registered Successfully");
+        navigate("/");
+      }
+    } catch (e) {
+      alert(e.response?.data?.message);
     }
-    
   }
 
-
   return (
-    <div className="flex h-screen w-full bg-green-50">
-      {/* Left side image for desktop */}
+    <div className="flex h-screen w-full bg-green-50 p-6">
+      {/* Left side image */}
       <div className="w-1/2 hidden md:flex items-center justify-center bg-green-100">
         <img src={logo} alt="GeoCart Logo" className="w-64 h-64 object-contain" />
       </div>
 
       {/* Right side form */}
       <div className="w-full md:w-1/2 flex flex-col items-center justify-center px-6 md:px-20">
-        <div className="w-full max-w-md bg-white p-10 rounded-3xl shadow-lg flex flex-col items-center">
-
-          {/* Toggle Login/Register */}
+        <div className="w-full max-w-md bg-white p-6 rounded-3xl shadow-lg flex flex-col items-center">
+          {/* Toggle */}
           <div className="flex gap-4 mb-6">
             <button
               onClick={() => setIsLogin(true)}
@@ -143,28 +127,28 @@ const LoginCard = () => {
                 value={userData.email}
                 onChange={handleChange}
                 placeholder="Email"
-                className="w-full h-12 px-5 rounded-full border border-gray-300 placeholder-gray-400 text-gray-600 focus:ring-2 focus:ring-green-300 outline-none"
+                className="w-full h-12 px-5 rounded-full border border-gray-300"
                 required
               />
 
-              <input
-                type="password"
-                name="password"
-                value={userData.password}
-                onChange={handleChange}
-                placeholder="Password"
-                className="w-full h-12 px-5 rounded-full border border-gray-300 placeholder-gray-400 text-gray-600 focus:ring-2 focus:ring-green-300 outline-none"
-                required
-              />
-
-              <div className="flex justify-between items-center text-sm text-gray-500">
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="w-4 h-4" />
-                  Remember me
-                </label>
-                <a href="#" className="underline hover:text-green-700">
-                  Forgot password?
-                </a>
+              {/* Password */}
+              <div className="relative">
+                <input
+                  type={showLoginPassword ? "text" : "password"}
+                  name="password"
+                  value={userData.password}
+                  onChange={handleChange}
+                  placeholder="Password"
+                  className="w-full h-12 px-5 pr-12 rounded-full border border-gray-300"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowLoginPassword(!showLoginPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showLoginPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
 
               <button
@@ -188,52 +172,77 @@ const LoginCard = () => {
                 value={userData.name}
                 onChange={handleChange}
                 placeholder="Full Name"
-                className="w-full h-12 px-5 rounded-full border border-gray-300 placeholder-gray-400 text-gray-600 focus:ring-2 focus:ring-green-300 outline-none"
+                className="w-full h-12 px-5 rounded-full border border-gray-300"
                 required
               />
+
               <input
                 type="email"
                 name="email"
                 value={userData.email}
                 onChange={handleChange}
                 placeholder="Email"
-                className="w-full h-12 px-5 rounded-full border border-gray-300 placeholder-gray-400 text-gray-600 focus:ring-2 focus:ring-green-300 outline-none"
+                className="w-full h-12 px-5 rounded-full border border-gray-300"
                 required
               />
-              <input
-                type="password"
-                name="password"
-                value={userData.password}
-                onChange={handleChange}
-                placeholder="Password"
-                className="w-full h-12 px-5 rounded-full border border-gray-300 placeholder-gray-400 text-gray-600 focus:ring-2 focus:ring-green-300 outline-none"
-                required
-              />
-              <input
-                type="password"
-                name="confirmPassword"
-                value={userData.confirmPassword}
-                onChange={handleChange}
-                placeholder="Confirm Password"
-                className="w-full h-12 px-5 rounded-full border border-gray-300 placeholder-gray-400 text-gray-600 focus:ring-2 focus:ring-green-300 outline-none"
-                required
-              />
+
+              {/* Password */}
+              <div className="relative">
+                <input
+                  type={showRegisterPassword ? "text" : "password"}
+                  name="password"
+                  value={userData.password}
+                  onChange={handleChange}
+                  placeholder="Password"
+                  className="w-full h-12 px-5 pr-12 rounded-full border border-gray-300"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showRegisterPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+
+              {/* Confirm Password */}
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  value={userData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm Password"
+                  className="w-full h-12 px-5 pr-12 rounded-full border border-gray-300"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+
               <input
                 type="text"
                 name="address"
                 value={userData.address}
                 onChange={handleChange}
                 placeholder="Address"
-                className="w-full h-12 px-5 rounded-full border border-gray-300 placeholder-gray-400 text-gray-600 focus:ring-2 focus:ring-green-300 outline-none"
+                className="w-full h-12 px-5 rounded-full border border-gray-300"
                 required
               />
+
               <input
                 type="tel"
                 name="phone"
                 value={userData.phone}
                 onChange={handleChange}
                 placeholder="Phone Number"
-                className="w-full h-12 px-5 rounded-full border border-gray-300 placeholder-gray-400 text-gray-600 focus:ring-2 focus:ring-green-300 outline-none"
+                className="w-full h-12 px-5 rounded-full border border-gray-300"
                 required
               />
 
