@@ -6,28 +6,29 @@ const API_BASE = import.meta.env.VITE_URI;
 
 const AllGrocery = () => {
   const [products, setProducts] = useState([]);
-  const [counts, setCounts] = useState();
-  const [cart,setCart]=useState()
+  const [cart, setCart] = useState();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
-  const navigate=useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchProducts() {
       try {
         const groceries = await axios.get(`${API_BASE}/api/products/`);
-        console.log(groceries.data)
-        const avail=groceries.data.filter((item)=>item.inStock==true)
+        const avail = groceries.data.filter(
+          (item) => item.inStock === true
+        );
         setProducts(avail);
-        const user=await axios.get(`${API_BASE}/api/users/user`,{
-          headers:{
-            Authorization:localStorage.getItem("token")
+
+        const user = await axios.get(
+          `${API_BASE}/api/users/user`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
           }
-        })
-        console.log(user.data)
-        setCart(user.data.cart)
-        console.log(user.data.cart)
-        
+        );
+        setCart(user.data.cart);
       } catch (err) {
         console.error(err);
       }
@@ -35,89 +36,68 @@ const AllGrocery = () => {
     fetchProducts();
   }, []);
 
-  /* ---------- Count Logic ---------- */
+  /* ---------- Count Logic (UNCHANGED) ---------- */
   async function increment(id) {
-  try {
-    const response = await axios.patch(
-      `${API_BASE}/api/users/add/cart`,
-      { id },
-      {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        },
-      }
-    );
-    if(response.status==404){      
-    navigate("/login")
-    }
-
-    // Update cart locally
-     setCart((prevCart) => {
-      const existingItem = prevCart.find(
-        (item) => item.product === id
+    try {
+      await axios.patch(
+        `${API_BASE}/api/users/add/cart`,
+        { id },
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
       );
 
-      // 🔹 Case 1: Already in cart → increment
-      if (existingItem) {
-        return prevCart.map((item) =>
-          item.product === id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
+      setCart((prevCart) => {
+        const existingItem = prevCart.find(
+          (item) => item.product === id
         );
-      }
 
-      // 🔹 Case 2: First time add → push new item
-      return [
-        ...prevCart,
-        { product: id, quantity: 1 }
-      ];
-    });
-  } catch (err) {
-    // console.error(err);
-      alert("Please Login first") 
-    navigate("/login")
-  }
-}
-  async function decrement(id) {
-  try {
-    const response = await axios.patch(
-      `${API_BASE}/api/users/remove/cart`,
-      { id },
-      {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        },
-      }
-    );
-    if(response.status==404){  
-      
-      // alert("Please Login first")     
-    navigate("/login")
+        if (existingItem) {
+          return prevCart.map((item) =>
+            item.product === id
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+          );
+        }
+
+        return [...prevCart, { product: id, quantity: 1 }];
+      });
+    } catch {
+      alert("Please Login first");
+      navigate("/login");
     }
+  }
 
-    // Update cart locally
-     setCart((prevCart) => {
-        return prevCart.map((item) =>
-          item.product === id
-            ? { ...item, quantity:item.quantity-1 }
-            : item
-        ).filter((item)=>
-        item.quantity>0
+  async function decrement(id) {
+    try {
+      await axios.patch(
+        `${API_BASE}/api/users/remove/cart`,
+        { id },
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
       );
 
-    });
-  } catch (err) {
-    
-      alert("Please Login first") 
-    // console.error(err);    
-    navigate("/login")
+      setCart((prevCart) =>
+        prevCart
+          .map((item) =>
+            item.product === id
+              ? { ...item, quantity: item.quantity - 1 }
+              : item
+          )
+          .filter((item) => item.quantity > 0)
+      );
+    } catch {
+      alert("Please Login first");
+      navigate("/login");
+    }
   }
-}
 
-
- 
-
-  /* ---------- Search + Filter Logic ---------- */
+  /* ---------- Search + Filter Logic (UNCHANGED) ---------- */
   const filteredProducts = useMemo(() => {
     return products.filter((item) => {
       const matchSearch = item.name
@@ -137,8 +117,6 @@ const AllGrocery = () => {
 
         {/* Search & Filter */}
         <div className="px-10 flex flex-wrap gap-6 justify-between items-center">
-          
-          {/* Search */}
           <div className="w-full md:w-[50%]">
             <div className="flex items-center bg-gray-100 h-12 rounded-lg px-4">
               <input
@@ -152,7 +130,6 @@ const AllGrocery = () => {
             </div>
           </div>
 
-          {/* Category Filter */}
           <div className="w-full md:w-[25%]">
             <select
               value={category}
@@ -168,15 +145,17 @@ const AllGrocery = () => {
           </div>
         </div>
 
-        {/* Title */}
         <div className="px-10 my-6 font-bold text-xl">
           All Products ({filteredProducts.length})
         </div>
 
-        {/* Products Grid (4 per row) */}
+        {/* Products Grid */}
         <div className="px-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredProducts.map((item) => {
-            // const count = counts[item._id] || 0;
+            const qty =
+              cart?.find(
+                (c) => c.product === item._id
+              )?.quantity || 0;
 
             return (
               <div
@@ -194,8 +173,10 @@ const AllGrocery = () => {
                                group-hover:scale-110 transition-transform duration-500"
                   />
 
-                  {/* Hover Controls */}
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                  {/* DESKTOP HOVER CONTROLS (UNCHANGED) */}
+                  <div className="absolute inset-0 bg-black/40 
+                                  hidden md:flex items-center justify-center 
+                                  opacity-0 group-hover:opacity-100 transition">
                     <div className="flex items-center gap-4 bg-white px-4 py-2 rounded-lg">
                       <button
                         className="text-lg font-bold px-2 hover:text-red-500"
@@ -204,15 +185,13 @@ const AllGrocery = () => {
                         −
                       </button>
 
-                      <span className="font-semibold text-lg">{
-                        cart?
-                        cart.find(itemi=>itemi.product==item._id)?.quantity || 0                      
-                        : 0
-                        }</span>
+                      <span className="font-semibold text-lg">
+                        {qty}
+                      </span>
 
                       <button
                         className="text-lg font-bold px-2 hover:text-green-600"
-                        onClick={() =>increment(item._id)}
+                        onClick={() => increment(item._id)}
                       >
                         +
                       </button>
@@ -220,12 +199,35 @@ const AllGrocery = () => {
                   </div>
                 </div>
 
+                {/* ✅ MOBILE CONTROLS (NEW – NO HOVER) */}
+                <div className="flex md:hidden justify-center items-center gap-6 py-3 border-t">
+                  <button
+                    onClick={() => decrement(item._id)}
+                    className="w-8 h-8 rounded-full bg-gray-100 text-lg font-bold"
+                  >
+                    −
+                  </button>
+
+                  <span className="font-semibold text-lg">
+                    {qty}
+                  </span>
+
+                  <button
+                    onClick={() => increment(item._id)}
+                    className="w-8 h-8 rounded-full bg-gray-100 text-lg font-bold"
+                  >
+                    +
+                  </button>
+                </div>
+
                 {/* Product Info */}
                 <div className="p-4 text-center">
                   <p className="font-semibold text-base truncate">
                     {item.name}
                   </p>
-                  <p className="text-gray-600 mt-1">₹{item.price}</p>
+                  <p className="text-gray-600 mt-1">
+                    ₹{item.price}
+                  </p>
                   <p className="text-xs text-gray-400 mt-1">
                     {item.category}
                   </p>
@@ -235,7 +237,6 @@ const AllGrocery = () => {
           })}
         </div>
 
-        {/* Empty State */}
         {filteredProducts.length === 0 && (
           <div className="text-center text-gray-500 mt-10">
             No products found 😕

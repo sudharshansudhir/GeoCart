@@ -26,7 +26,7 @@ const user=new mongoose.Schema({
         },
         amount:{
             type:Number
-        },
+        }
     }]
 })
 

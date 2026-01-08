@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import logo from "../assets/GeoCart-Logo.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AppContext, AppProvider } from "../context/Context";
 const API_BASE = import.meta.env.VITE_URI
 
 const ProfileCard = () => {
@@ -10,6 +11,7 @@ const ProfileCard = () => {
   const [name,Setname]=useState()
   const [email,Setemail]=useState()
   const [phonenumber,Setphonenumber]=useState()
+  const {setLogin}=useContext(AppProvider)
   const [address,Setaddress]=useState()
   const [editUser,seteditUser]=useState()
 
@@ -65,6 +67,7 @@ const ProfileCard = () => {
       }
       )
       alert("Deleted Successfully")
+      setLogin(false)
       localStorage.clear("token")
       navigate("/login")
     }
@@ -191,7 +194,7 @@ const ProfileCard = () => {
           </h2>
 
           <div className="flex flex-wrap gap-4">
-            <button onClick={()=>{return localStorage.clear("token"),navigate("/login")}} className="px-6 py-3 rounded-xl bg-red-50 text-red-600 font-medium hover:bg-red-100 transition">
+            <button onClick={()=>{return localStorage.clear("token"),setLogin(false),navigate("/login")}} className="px-6 py-3 rounded-xl bg-red-50 text-red-600 font-medium hover:bg-red-100 transition">
               Logout
             </button>
             <button onClick={()=>deleteUser(item._id)} className="px-6 py-3 rounded-xl bg-red-50 text-red-600 font-medium hover:bg-red-100 transition">

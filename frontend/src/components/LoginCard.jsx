@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import logo from "../assets/GeoCart-Logo.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import { AppContext, AppProvider } from "../context/Context";
 const API_BASE = import.meta.env.VITE_URI;
 
 const LoginCard = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
-
+  const {setLogin}=useContext(AppProvider)
   // 👁️ Password toggle states
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
@@ -41,9 +42,13 @@ const LoginCard = () => {
         alert("Welcome Admin");
         navigate("/admin");
       } else {
+        setLogin(true)
         localStorage.setItem("token", result.data.token);
         localStorage.setItem("isUser", true);
         localStorage.setItem("isAdmin", false);
+        
+        
+
         alert("Logged In Successfully");
         navigate("/");
       }
@@ -75,7 +80,7 @@ const LoginCard = () => {
           address: "",
           phone: "",
         });
-
+        setLogin(true)
         alert("Registered Successfully");
         navigate("/");
       }

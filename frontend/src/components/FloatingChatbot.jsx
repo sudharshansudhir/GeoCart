@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import ChatWindow from "./ChatWindow";
+import { AppContext, AppProvider } from "../context/Context";
 
 const FloatingChatbot = () => {
   const [open, setOpen] = useState(false);
+  const {login}=useContext(AppProvider)
 
   return (
-    <>
+    <>{login && 
+          <>
       {/* Floating Button */}
       <button
         onClick={() => setOpen(true)}
@@ -26,6 +29,8 @@ const FloatingChatbot = () => {
       {/* Chat Window */}
       {open && <ChatWindow onClose={() => setOpen(false)} />}
     </>
+    }</>
+
   );
 };
 

@@ -14,7 +14,7 @@ import FloatingChatbot from "./components/FloatingChatbot";
 
 
 function App() {
-  const user=localStorage.getItem("isUser")
+
 
 
   return (
@@ -34,9 +34,8 @@ function App() {
         <Route path='/about' Component={AboutPage}/>
       </Routes>
       {/* <Footer/> */}
-{user=="true"&&<FloatingChatbot />
+      <FloatingChatbot />
 
-}
       
     </>
   )

@@ -384,7 +384,6 @@ function getOrder(){
 </button>
 
 
-<h1 onClick={()=>getOrder()}>Click me</h1>
 
       </div>
     </div>

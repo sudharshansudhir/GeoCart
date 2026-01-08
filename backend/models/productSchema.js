@@ -13,7 +13,7 @@ const products=new mongoose.Schema({
     },
     capacity:Number,
     quantity:"String"
-})
+}) 
 
 
 export default mongoose.model("products",products)
